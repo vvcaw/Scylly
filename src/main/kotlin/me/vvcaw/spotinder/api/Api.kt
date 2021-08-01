@@ -50,7 +50,7 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
         }
 
         app.get("/discover",
-            ViteHandler("pages/account.js") { ctx ->
+            ViteHandler("pages/discover.js") { ctx ->
 
                 val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
 
