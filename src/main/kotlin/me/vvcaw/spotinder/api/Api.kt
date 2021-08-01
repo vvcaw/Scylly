@@ -33,31 +33,36 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
 
         app.get("/", ViteHandler("pages/index.js"))
 
+        app.get("/redirect") { ctx ->
+            // Get custom code from url to authorize user
+            val code = ctx.queryParam("code") ?: ""
+
+            val user = if (code != "") {
+                spotify.authorize(code)
+            } else {
+                ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
+            }
+
+            // Safe user object
+            ctx.sessionAttribute("user", user)
+
+            ctx.redirect("/discover")
+        }
+
         app.get("/discover",
             ViteHandler("pages/account.js") { ctx ->
 
-                // Get custom code from url to authorize user
-                val code = ctx.queryParam("code") ?: ""
-
-                // Only call .authorize if user is logging in from spotify, otherwise get user object from session
-                val user = if(code != ""){
-                    spotify.authorize(code)
-                }
-                else{
-                    ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
-                }
+                val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
 
                 // Get users top songs
                 val recommendations = spotify.getSongRecommendations(user.accessToken)
-
-                // Safe user object and topSongs list in session
-                ctx.sessionAttribute("user", user)
 
                 // Hand over top songs
                 mapOf(
                     "recommendations" to recommendations,
                     "user" to user
                 )
-        })
+            }
+        )
     }
 }

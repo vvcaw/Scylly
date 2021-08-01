@@ -13,7 +13,7 @@ internal class SpotifyImplementation() : Spotify {
 
     private val clientId = "379ef201c377495cb09a99464e0e49df"
     private val clientSecret = "498f0eb1ed6d4a80b2fc6110680a2a04"
-    private val redirectURI = SpotifyHttpManager.makeUri("http://localhost:7000/discover")
+    private val redirectURI = SpotifyHttpManager.makeUri("http://localhost:7000/redirect")
 
     private val api = SpotifyApi.Builder()
         .setClientId(clientId)
