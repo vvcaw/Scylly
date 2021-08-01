@@ -1,11 +1,9 @@
-package me.vvcaw.hotify.api.spotify
+package me.vvcaw.spotinder.api.spotify
 
-import com.mongodb.client.MongoDatabase
 import com.wrapper.spotify.model_objects.specification.Track
 import com.wrapper.spotify.model_objects.specification.User
-import me.vvcaw.hotify.data.SimplifiedSongRecord
-import me.vvcaw.hotify.data.SongRecord
-import me.vvcaw.hotify.data.UserRecord
+import me.vvcaw.spotinder.data.SimplifiedSongRecord
+import me.vvcaw.spotinder.data.UserRecord
 
 interface Spotify {
     abstract class LogicException(text: String) : Exception(text)
@@ -20,6 +18,6 @@ interface Spotify {
     fun getSongRecommendations(accessToken: String) : List<SimplifiedSongRecord>
 
     companion object{
-        fun getInstance(database: MongoDatabase) : Spotify = SpotifyImplementation(database)
+        fun getInstance() : Spotify = SpotifyImplementation()
     }
 }

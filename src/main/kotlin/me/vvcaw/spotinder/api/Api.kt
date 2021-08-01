@@ -1,18 +1,15 @@
-package me.vvcaw.hotify.api
+package me.vvcaw.spotinder.api
 
 import de.elfsoft.javalin.vite.JavalinVite
 import de.elfsoft.javalin.vite.ViteHandler
 import io.javalin.Javalin
 import io.javalin.http.*
-import me.vvcaw.hotify.api.spotify.Spotify
-import me.vvcaw.hotify.api.spotify.SpotifyImplementation
-import me.vvcaw.hotify.api.spotify.toSongRecords
-import me.vvcaw.hotify.data.AddRequest
-import me.vvcaw.hotify.data.UserRecord
-import me.vvcaw.hotify.data.user.UserSongSocket
-import me.vvcaw.hotify.util.secureRandom
+import me.vvcaw.spotinder.api.spotify.Spotify
+import me.vvcaw.spotinder.api.spotify.toSongRecords
+import me.vvcaw.spotinder.data.AddRequest
+import me.vvcaw.spotinder.data.UserRecord
 
-class Api(logic: UserSongSocket, port: Int, spotify: Spotify, isDev: Boolean) {
+class Api(spotify: Spotify, isDev: Boolean, port: Int) {
 
     init {
         // Setting up the app
@@ -20,18 +17,6 @@ class Api(logic: UserSongSocket, port: Int, spotify: Spotify, isDev: Boolean) {
 
             JavalinVite.configure(config, isDev)
         }.start("127.0.0.1", port)
-
-        app.exception(UserSongSocket.LogicException::class.java) { e, ctx ->
-            val response = when (e) {
-                is UserSongSocket.NotFoundException -> NotFoundResponse()
-                is UserSongSocket.UnauthorizedException -> UnauthorizedResponse()
-                is UserSongSocket.ForbiddenException -> ForbiddenResponse()
-                else -> InternalServerErrorResponse("Api Exception not found")
-            }
-
-            ctx.status(response.status)
-            ctx.result(response.message ?: "")
-        }
 
         app.exception(Spotify.LogicException::class.java) { e, ctx ->
             val response = when (e) {
@@ -46,7 +31,9 @@ class Api(logic: UserSongSocket, port: Int, spotify: Spotify, isDev: Boolean) {
             ctx.result(response.message ?: "")
         }
 
-        app.get("/spotify-redirect",
+        app.get("/", ViteHandler("pages/index.js"))
+
+        app.get("/discover",
             ViteHandler("pages/account.js") { ctx ->
 
                 // Get custom code from url to authorize user
@@ -61,57 +48,16 @@ class Api(logic: UserSongSocket, port: Int, spotify: Spotify, isDev: Boolean) {
                 }
 
                 // Get users top songs
-                val topSongs = spotify.getTopSongs(user.accessToken)
-                val topSongsRecords = topSongs.toSongRecords(user.username)
-
-                // Also save songs to mongo if user is not present in database, else skip this step (redundant songs)
-                if(!logic.usersSongsExist(user.username))
-                    logic.addSongs(topSongsRecords)
+                val recommendations = spotify.getSongRecommendations(user.accessToken)
 
                 // Safe user object and topSongs list in session
                 ctx.sessionAttribute("user", user)
 
                 // Hand over top songs
                 mapOf(
-                    "topSongs" to topSongsRecords,
+                    "recommendations" to recommendations,
                     "user" to user
                 )
         })
-
-        app.get("/", ViteHandler("pages/overview.js"))
-
-        // testing for tinder thingi
-        app.get("/test", ViteHandler("pages/test.js"))
-
-        app.get("/api/recommendations") { ctx ->
-            val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
-
-            val recommendations = spotify.getSongRecommendations(user.accessToken)
-
-            /* mapOf(
-                "recommendations" to recommendations
-            )
-
-             */
-
-            ctx.result(recommendations.joinToString(" | "))
-        }
-
-        app.get("/api/trending") { ctx ->
-            val trending = logic.getTrending(20)
-
-            if(trending.isEmpty())
-                throw InternalServerErrorResponse("List is empty")
-
-            val song = trending[secureRandom.nextInt(trending.size)]
-
-            ctx.json(song)
-        }
-
-        app.put("/api/trending/add") { ctx ->
-            val addData = ctx.bodyAsClass(AddRequest::class.java)
-
-            logic.addSongs(addData.songs)
-        }
     }
 }

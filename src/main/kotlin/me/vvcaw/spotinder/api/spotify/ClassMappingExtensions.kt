@@ -1,7 +1,7 @@
-package me.vvcaw.hotify.api.spotify
+package me.vvcaw.spotinder.api.spotify
 
 import com.wrapper.spotify.model_objects.specification.*
-import me.vvcaw.hotify.data.*
+import me.vvcaw.spotinder.data.*
 import java.util.concurrent.TimeUnit
 
 fun Artist.toArtistRecord() = ArtistRecord(

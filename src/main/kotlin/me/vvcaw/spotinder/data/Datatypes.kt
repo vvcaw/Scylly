@@ -1,4 +1,4 @@
-package me.vvcaw.hotify.data
+package me.vvcaw.spotinder.data
 
 // API
 data class SearchRequest(val name: String)

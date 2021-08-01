@@ -1,23 +1,19 @@
-package me.vvcaw.hotify.api.spotify
+package me.vvcaw.spotinder.api.spotify
 
-import com.mongodb.client.MongoDatabase
 import com.wrapper.spotify.SpotifyApi
 import com.wrapper.spotify.SpotifyHttpManager
 import com.wrapper.spotify.model_objects.specification.Track
 import com.wrapper.spotify.model_objects.specification.User
-import me.vvcaw.hotify.api.spotify.Spotify.UnauthorizedException
-import me.vvcaw.hotify.api.spotify.Spotify.BadRequestException
-import me.vvcaw.hotify.data.SimplifiedSongRecord
-import me.vvcaw.hotify.data.UserRecord
-import org.litote.kmongo.eq
-import org.litote.kmongo.findOne
-import org.litote.kmongo.getCollection
+import me.vvcaw.spotinder.api.spotify.Spotify.UnauthorizedException
+import me.vvcaw.spotinder.api.spotify.Spotify.BadRequestException
+import me.vvcaw.spotinder.data.SimplifiedSongRecord
+import me.vvcaw.spotinder.data.UserRecord
 
-internal class SpotifyImplementation(val database: MongoDatabase) : Spotify {
+internal class SpotifyImplementation() : Spotify {
 
-    private val clientId = "ca135148aceb494cb629d07939b71f7c"
-    private val clientSecret = "35a2dd046e2549eca82bb366ff7b5764"
-    private val redirectURI = SpotifyHttpManager.makeUri("http://localhost:7000/spotify-redirect")
+    private val clientId = "379ef201c377495cb09a99464e0e49df"
+    private val clientSecret = "498f0eb1ed6d4a80b2fc6110680a2a04"
+    private val redirectURI = SpotifyHttpManager.makeUri("http://localhost:7000/discover")
 
     private val api = SpotifyApi.Builder()
         .setClientId(clientId)
@@ -79,17 +75,7 @@ internal class SpotifyImplementation(val database: MongoDatabase) : Spotify {
             val displayName = userProfile.displayName
             val username = userProfile.id
 
-            // Build UserRecord and safe in mongo
-            val user = UserRecord(username, refreshToken, accessToken, profilePictures, displayName)
-
-            val col = database.getCollection<UserRecord>()
-
-            // Only insert user if it's his first login
-            if (col.findOne(UserRecord::username.eq(username)) == null) {
-                col.insertOne(user)
-            }
-
-            return user
+            return UserRecord(username, refreshToken, accessToken, profilePictures, displayName)
         } catch (e: Exception) {
             e.printStackTrace()
 
