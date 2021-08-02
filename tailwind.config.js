@@ -13,7 +13,8 @@ module.exports = {
                 light: '#373b45',
                 lightB: '#96A9EE',
                 darkB: '#8699db',
-                spotify: '#1DB954'
+                spotify: '#1DB954',
+                spotifyRed: '#b91d4e',
             },
             scale: {
               '101': '1.01'
