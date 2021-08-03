@@ -7,6 +7,7 @@ import com.wrapper.spotify.model_objects.specification.User
 import me.vvcaw.spotinder.api.spotify.Spotify.UnauthorizedException
 import me.vvcaw.spotinder.api.spotify.Spotify.BadRequestException
 import me.vvcaw.spotinder.data.SimplifiedSongRecord
+import me.vvcaw.spotinder.data.SongRecord
 import me.vvcaw.spotinder.data.UserRecord
 
 internal class SpotifyImplementation() : Spotify {
@@ -42,10 +43,10 @@ internal class SpotifyImplementation() : Spotify {
         println("URI: $uri");
     }
 
-    private fun getUserSpecificAPI(accessToken: String): SpotifyApi? {
+    private fun getUserSpecificAPI(accessToken: String): SpotifyApi {
         return SpotifyApi.Builder()
             .setAccessToken(accessToken)
-            .build()
+            .build() ?: throw UnauthorizedException()
     }
 
     private fun clientCredentials() {
@@ -86,24 +87,24 @@ internal class SpotifyImplementation() : Spotify {
     override fun getCurrentUserProfile(accessToken: String): User {
         val userApi = getUserSpecificAPI(accessToken)
 
-        val request = userApi?.currentUsersProfile
+        val request = userApi.currentUsersProfile
             ?.build()
 
-        return request?.execute() ?: throw UnauthorizedException()
+        return request?.execute() ?: throw BadRequestException()
     }
 
     override fun getTopSongs(accessToken: String): List<Track> {
         val userApi = getUserSpecificAPI(accessToken)
 
-        val request = userApi?.usersTopTracks
+        val request = userApi.usersTopTracks
             ?.limit(50)
             ?.time_range("short_term")
             ?.build()
 
-        return request?.execute()?.items?.toList() ?: throw UnauthorizedException()
+        return request?.execute()?.items?.toList() ?: throw BadRequestException()
     }
 
-    override fun getSongRecommendations(accessToken: String): List<SimplifiedSongRecord> {
+    override fun getSongRecommendations(accessToken: String): List<SongRecord> {
         val userApi = getUserSpecificAPI(accessToken)
 
         val topSongs = getTopSongs(accessToken)
@@ -112,13 +113,22 @@ internal class SpotifyImplementation() : Spotify {
         val topSongsArtistSeeds = topSongs.map { it.artists.first().id }.shuffled().subList(0, 1).joinToString(",")
         val topSongsTrackSeeds = topSongs.map { it.id }.shuffled().subList(0, 2).joinToString(",")
 
-        val request = userApi?.recommendations
+        val request = userApi.recommendations
             ?.seed_artists(topSongsArtistSeeds)
             ?.seed_tracks(topSongsTrackSeeds)
             ?.build()
 
-        val songs = request?.execute()?.tracks?.toList() ?: throw BadRequestException()
+        val songs = request?.execute()?.tracks?.mapNotNull { getTrack(it.id, accessToken) } ?: throw BadRequestException()
 
-        return songs.toSimplifiedSongRecords()
+        return songs.toSongRecords()
+    }
+
+    private fun getTrack(songId: String, accessToken: String): Track {
+        val userApi = getUserSpecificAPI(accessToken)
+
+        val request = userApi.getTrack(songId)
+            ?.build()
+
+        return request?.execute() ?: throw BadRequestException()
     }
 }

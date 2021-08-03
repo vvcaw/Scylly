@@ -12,7 +12,7 @@ fun ArtistSimplified.toSimplifiedArtistRecord() = SimplifiedArtistRecord(
     name = name
 )
 
-fun Track.toSongRecord(username: String) = SongRecord(
+fun Track.toSongRecord() = SongRecord(
     name = name,
     artists = artists.toList().toSimplifiedArtistRecords(),
     images = (album.images.toList()).toStrings(),
@@ -20,7 +20,6 @@ fun Track.toSongRecord(username: String) = SongRecord(
     popularity = popularity,
     explicit = isExplicit,
     openUrl = externalUrls["spotify"],
-    user = username
 )
 
 fun TrackSimplified.toSimplifiedSongRecord() = SimplifiedSongRecord(
@@ -33,6 +32,6 @@ private fun List<Image>.toStrings() : List<String> { return this.map { it.url } 
 
 fun List<ArtistSimplified>.toSimplifiedArtistRecords() : List<SimplifiedArtistRecord> { return this.map { it.toSimplifiedArtistRecord() }.toList() }
 
-fun List<Track>.toSongRecords(username: String) : List<SongRecord> { return this.map { it.toSongRecord(username) }.toList() }
+fun List<Track>.toSongRecords() : List<SongRecord> { return this.map { it.toSongRecord() }.toList() }
 
 fun List<TrackSimplified>.toSimplifiedSongRecords() : List<SimplifiedSongRecord> { return this.map { it.toSimplifiedSongRecord() }.toList() }

@@ -24,7 +24,6 @@ data class SongRecord(
     val popularity: Int,
     val explicit: Boolean,
     val openUrl: String,
-    val user: String
 )
 
 data class ArtistRecord(val name: String)
