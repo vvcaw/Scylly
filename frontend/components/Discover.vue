@@ -7,6 +7,7 @@
           <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
         </svg>
       </div>
+      <!-- TODO: Add wiggle motion and bounce motion on heart and x when hovering -->
       <div v-on:mouseenter="toggleActiveState(1)" v-on:click="yeet(1)" ref="yes"
            class="bg-black border-l-1 border-solid border-opacity-20 cursor-pointer h-full w-full flex items-center justify-center  hover:bg-gray-900">
         <svg xmlns="http://www.w3.org/2000/svg" class="text-spotify h-48 w-48" viewBox="0 0 20 20" fill="currentColor">
@@ -14,11 +15,12 @@
         </svg>
       </div>
     </div>
-    <!-- TODO: Add component that loads data and somehow render new ones if other one was clicked away, also add toss animation on click :) -->
-    <div ref="song"
+    <!-- TODO: Add component that loads data and can somehow render new ones if other one was clicked away, also add toss animation on click :) -->
+    <!--<div ref="song"
          class="transition-all pointer-events-none z-10 duration-700 ease-out p-4 bg-white border border-opacity-25 h-96 w-72 rounded-md">
 
-    </div>
+    </div>-->
+    <Song ref="song"/>
   </div>
 </template>
 
@@ -28,30 +30,14 @@ import Song from "./Song.vue";
 export default {
   name: "Discover",
   components: {Song},
-  data() {
-    return {
-      direction: 0
-    }
-  },
   methods: {
     toggleActiveState(direction) {
       let card = this.$refs.song
-
-      // Add height modification if necessary
-      if (direction === 0) {
-        $(card).css({'transform': 'rotate(-10deg)', 'margin-right': '15rem', 'margin-left': '0'})
-      } else if (direction === 1) {
-        $(card).css({'transform': 'rotate(10deg)', 'margin-left': '15rem', 'margin-right': '0'})
-      }
+      card.toggleActiveState(direction)
     },
     yeet(direction) {
       let card = this.$refs.song
-
-      if(direction === 0){
-        $(card).css({'transform': 'rotate(-360deg) scale(0.1)', 'margin-right': '150%'})
-      } else if (direction === 1){
-        $(card).css({'transform': 'rotate(360deg) scale(0.1)', 'margin-left': '150%'})
-      }
+      card.yeet(direction)
     }
   }
 }
