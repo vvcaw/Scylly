@@ -64,5 +64,14 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
                 )
             }
         )
+
+        app.get("/api/recommendations") { ctx ->
+            val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
+
+            // Get users top songs
+            val recommendations = spotify.getSongRecommendations(user.accessToken)
+
+            ctx.json(recommendations)
+        }
     }
 }
