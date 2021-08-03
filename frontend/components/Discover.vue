@@ -15,11 +15,6 @@
         </svg>
       </div>
     </div>
-    <!-- TODO: Add component that loads data and can somehow render new ones if other one was clicked away, also add toss animation on click :) -->
-    <!--<div ref="song"
-         class="transition-all pointer-events-none z-10 duration-700 ease-out p-4 bg-white border border-opacity-25 h-96 w-72 rounded-md">
-
-    </div>-->
     <Song ref="song"/>
   </div>
 </template>
