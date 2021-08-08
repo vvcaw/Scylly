@@ -1,7 +1,10 @@
 <template>
   <div class="flex items-center w-full h-screen justify-center z-10">
+
+    <SoundInformation/>
+
     <div class="bg-black h-full grid grid-cols-2 w-full absolute items-center justify-center">
-      <div v-on:mouseenter="toggleActiveState(0)" v-on:click="yeet(0)" ref="no"
+      <div v-on:mouseenter="handleMouseOver(0)" v-on:click="yeet(0)" ref="no"
            class="group bg-black border-r-2 border-solid border-opacity-20 cursor-pointer h-full w-full flex items-center justify-center hover:bg-gray-900">
         <svg xmlns="http://www.w3.org/2000/svg" class="text-spotifyRed group-hover:animate-pulse h-48 w-48"
              viewBox="0 0 20 20" fill="currentColor">
@@ -10,7 +13,7 @@
                 clip-rule="evenodd"/>
         </svg>
       </div>
-      <div v-on:mouseenter="toggleActiveState(1)" v-on:click="yeet(1)" ref="yes"
+      <div v-on:mouseenter="handleMouseOver(1)" v-on:click="yeet(1)" ref="yes"
            class="group bg-black border-l-1 border-solid border-opacity-20 cursor-pointer h-full w-full flex items-center justify-center  hover:bg-gray-900">
         <svg xmlns="http://www.w3.org/2000/svg" class="text-spotify group-hover:animate-pulse h-48 w-48"
              viewBox="0 0 20 20" fill="currentColor">
@@ -20,7 +23,9 @@
         </svg>
       </div>
     </div>
-    <Song ref="song" :songs="recommendations"/>
+    <!-- the v-show here is not necessary and could be removed -->
+    <Song ref="song" v-show="true" v-on:done="cycle(this.$refs.song, this.activeCard)" :card-num-prop="2" :songs="recommendations.slice(0, recommendations.length / 2)"/>
+    <Song ref="song2" v-show="true" v-on:done="cycle(this.$refs.song2, this.activeCard)" :card-num-prop="1" :songs="recommendations.slice(recommendations.length / 2, recommendations.length)"/>
   </div>
 </template>
 
@@ -28,23 +33,74 @@
 import Song from "./Song.vue";
 import $ from "jquery";
 import jQuery from "jquery";
+import SoundInformation from "./SoundInformation.vue";
 
 export default {
   name: "Discover",
-  components: {Song},
+  components: {SoundInformation, Song},
   data() {
     return {
-      recommendations: $javalin.state.recommendations
+      canClick: true,
+      lastDirection: 0,
+      recommendations: $javalin.state.recommendations,
+      activeCard: 0,
+      secondCardActive: false,
+      cards: []
     }
   },
+  mounted() {
+    this.cards.push(this.$refs.song)
+    this.cards.push(this.$refs.song2)
+  },
   methods: {
+    handleMouseOver(direction) {
+      this.toggleActiveState(direction)
+
+      this.lastDirection = direction
+    },
     toggleActiveState(direction) {
-      let card = this.$refs.song
+      if (!this.canClick)
+        return
+
+      let card = this.cards[this.activeCard]
+
       card.toggleActiveState(direction)
     },
     yeet(direction) {
-      let card = this.$refs.song
+      if (!this.canClick)
+        return
+
+      this.canClick = false
+
+      let card = this.cards[this.activeCard]
+
       card.yeet(direction)
+
+      //this.cycle(card, this.activeCard)
+    },
+    cycle(card, cardIndex) {
+      // card is the card to be reset
+      card.setCardNum(1)
+
+      // increment the position of all other cards by one
+      this.cards.forEach((value, index) => {
+        if (index !== cardIndex) {
+          value.incrementCardNum()
+        }
+      });
+
+      // change active card number
+      if (this.activeCard + 1 < this.cards.length) {
+        this.activeCard++
+      } else {
+        this.activeCard = 0
+      }
+
+      // Allow user to click
+      this.canClick = true
+
+      // change direction of new active card to last registered direction
+      this.toggleActiveState(this.lastDirection)
     }
   }
 }

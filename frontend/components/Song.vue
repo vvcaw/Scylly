@@ -1,6 +1,7 @@
 <template>
   <div ref="song"
-       class="pointer-events-none z-10 mr-0 ml-0 p-4 bg-black border-2 border-dashed h-96 w-72 rounded-md flex flex-col">
+       v-bind:class="zIndex"
+       class="absolute pointer-events-none z-10 mr-0 ml-0 p-4 bg-black border-2 border-solid h-96 w-72 rounded-md flex flex-col">
     <img class="select-none rounded-md" :src="dataSongs[activeIndex].images[1]">
     <div class="h-full w-full flex flex-col items-start justify-center">
       <span class="select-none text-white font-medium text-2xl">{{ dataSongs[activeIndex].name }}</span>
@@ -10,26 +11,47 @@
 </template>
 
 <script>
-import axios from "axios";
 import $ from "jquery";
-import jQuery from "jquery";
+import axios from "axios";
 
 export default {
   name: "Song",
   props: {
     songs: Array,
+    cardNumProp: Number,
+  },
+  computed: {
+    zIndex: function () {
+      return `z-${this.cardNum}0`;
+    }
   },
   data() {
     return {
+      cardNum: this.cardNumProp,
       activeIndex: 0,
       resetting: false,
       degrees: 0,
       margin: [0, 0],
       activeDirection: 0,
-      dataSongs: this.songs
+      dataSongs: this.songs,
+      audio: null,
+      playing: false
     }
   },
   methods: {
+    // get/set
+    incrementCardNum() {
+      this.cardNum++
+    },
+    setCardNum(newNum) {
+      this.cardNum = newNum
+    },
+
+    // http calls
+    async updateRecommendations() {
+      let res = await this.getRecommendations()
+      this.recommendations = res.data
+    },
     getRecommendations() {
       return axios.get('/api/recommendations')
           .then(function (response) {
@@ -38,6 +60,14 @@ export default {
           .catch(function (error) {
             console.log(error);
           })
+    },
+
+    play() {
+      let audio = new Audio(this.songs[this.activeIndex].playUrl)
+
+      this.audio = audio
+
+      audio.play()
     },
     toggleActiveState(direction) {
       let card = $(this.$refs.song)
@@ -48,8 +78,15 @@ export default {
       if (this.resetting)
         return
 
+      if(!this.playing){
+        this.play()
+        this.playing = true
+      }
+
+      console.log(`toggleActiveState was called for card with title ${this.dataSongs[this.activeIndex].name}`)
+
       if (direction === 0) {
-        $({deg: this.degrees, marginRight: this.margin[1], marginLeft: this.margin[0]}).animate({
+        $({deg: this.degrees, marginRight: this.margin[1], marginLeft: this.margin[0]}).animate({ /// YOU CANT CALL YEET BEFORE THIS ANIMATION IS FINISHED OBV.
           deg: -10,
           marginRight: 15,
           marginLeft: 0
@@ -57,6 +94,11 @@ export default {
           duration: 800,
           easing: "easeOutExpo",
           step: function (now, x) {
+            if (vue.resetting) {
+              $(this).stop()
+            }
+
+            console.log("ANIMATING")
             switch (x.prop) {
               case "deg":
                 card.css("transform", `rotate(${now}deg)`);
@@ -87,6 +129,11 @@ export default {
           duration: 800,
           easing: "easeOutExpo",
           step: function (now, x) {
+            if (vue.resetting) {
+              $(this).stop()
+            }
+
+            console.log("ANIMATING")
             switch (x.prop) {
               case "deg":
                 card.css("transform", `rotate(${now}deg)`);
@@ -111,10 +158,15 @@ export default {
       }
     },
     yeet(direction) {
+      this.audio.pause()
+      this.playing = false
+
       let card = $(this.$refs.song)
 
       if (this.resetting)
         return
+
+      console.log(`yeet was called for card with title ${this.dataSongs[this.activeIndex].name}`)
 
       if (direction === 0) {
 
@@ -128,7 +180,24 @@ export default {
           duration: 300,
           easing: "easeOutCirc",
           complete: () => {
-            this.reset()
+            let song = $(this.$refs.song)
+
+            // Stop animation here! Otherwise animation renders after resetting style causing glitches!
+            // Not working because .animate() is not called directly on 'song' selector but rather on javascript object
+            // song instance doesn't know it's currently animating
+            song.stop()
+
+            song.removeAttr('style')
+            this.$emit("done")
+
+            console.log(`Reset and removed style for card with title ${this.dataSongs[this.activeIndex].name}`)
+            console.log($(this.$refs.song).css("transform")) // Some glitch happening here, not necessarily here but yk
+
+            this.resetting = false
+
+            this.degrees = 0
+            this.margin[1] = 0
+            this.margin[0] = 0
           },
           step: function (now, x) {
             switch (x.prop) {
@@ -153,7 +222,18 @@ export default {
           duration: 300,
           easing: "easeOutCirc",
           complete: () => {
-            this.reset()
+            this.$refs.song.getAttribute('style')
+            this.$refs.song.removeAttribute('style')
+            this.$emit("done") // This gets called too early -> some reference index is probably wrong
+
+            console.log(`Reset and removed style for card with title ${this.dataSongs[this.activeIndex].name}`)
+            console.log($(this.$refs.song).css("transform"))
+
+            this.resetting = false
+
+            this.degrees = 0
+            this.margin[1] = 0
+            this.margin[0] = 0
           },
           step: function (now, x) {
             switch (x.prop) {
@@ -168,32 +248,6 @@ export default {
         });
       }
     },
-    async reset() {
-      let card = $(this.$refs.song)
-
-      card.css("visibility", "hidden")
-
-      // Change this to http request -> return promise an await it
-      if (this.activeIndex + 1 >= this.dataSongs.length) {
-        let res = await this.getRecommendations()
-        this.dataSongs = res.data
-        this.activeIndex = 0
-      } else {
-        this.activeIndex++
-      }
-
-      card.removeAttr('style')
-
-      // Nice animation missing here fix it pls
-      this.degrees = 0
-      this.margin[1] = 0
-      this.margin[0] = 0
-
-      this.resetting = false
-
-      // Update new direction for card
-      this.toggleActiveState(this.activeDirection)
-    }
   }
 }
 </script>
