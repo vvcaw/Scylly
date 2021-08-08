@@ -20,6 +20,7 @@ fun Track.toSongRecord() = SongRecord(
     popularity = popularity,
     explicit = isExplicit,
     openUrl = externalUrls["spotify"],
+    playUrl = previewUrl
 )
 
 fun TrackSimplified.toSimplifiedSongRecord() = SimplifiedSongRecord(
