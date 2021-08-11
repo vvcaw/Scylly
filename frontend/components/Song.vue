@@ -83,8 +83,6 @@ export default {
         this.playing = true
       }
 
-      console.log(`toggleActiveState was called for card with title ${this.dataSongs[this.activeIndex].name}`)
-
       if (direction === 0) {
         $({deg: this.degrees, marginRight: this.margin[1], marginLeft: this.margin[0]}).animate({ /// YOU CANT CALL YEET BEFORE THIS ANIMATION IS FINISHED OBV.
           deg: -10,
@@ -98,7 +96,6 @@ export default {
               $(this).stop()
             }
 
-            console.log("ANIMATING")
             switch (x.prop) {
               case "deg":
                 card.css("transform", `rotate(${now}deg)`);
@@ -133,7 +130,6 @@ export default {
               $(this).stop()
             }
 
-            console.log("ANIMATING")
             switch (x.prop) {
               case "deg":
                 card.css("transform", `rotate(${now}deg)`);
@@ -166,8 +162,6 @@ export default {
       if (this.resetting)
         return
 
-      console.log(`yeet was called for card with title ${this.dataSongs[this.activeIndex].name}`)
-
       if (direction === 0) {
 
         // Hinder user from canceling animations
@@ -179,7 +173,7 @@ export default {
         }, {
           duration: 300,
           easing: "easeOutCirc",
-          complete: () => {
+          complete: async () => {
             let song = $(this.$refs.song)
 
             // Stop animation here! Otherwise animation renders after resetting style causing glitches!
@@ -190,14 +184,22 @@ export default {
             song.removeAttr('style')
             this.$emit("done")
 
-            console.log(`Reset and removed style for card with title ${this.dataSongs[this.activeIndex].name}`)
-            console.log($(this.$refs.song).css("transform")) // Some glitch happening here, not necessarily here but yk
-
-            this.resetting = false
-
             this.degrees = 0
             this.margin[1] = 0
             this.margin[0] = 0
+
+            // Increment song index and request new songs if index reaches end of array
+            if (this.activeIndex + 1 >= this.dataSongs.length){
+              await this.updateRecommendations()
+
+              this.activeIndex = 0
+            } else {
+              this.activeIndex++
+            }
+
+            // Stop resetting here and wait for new recommendations if needed
+            this.resetting = false
+            console.log(this.activeIndex + ` ${this.dataSongs[this.activeIndex].name}`)
           },
           step: function (now, x) {
             switch (x.prop) {
@@ -221,19 +223,33 @@ export default {
         }, {
           duration: 300,
           easing: "easeOutCirc",
-          complete: () => {
-            this.$refs.song.getAttribute('style')
-            this.$refs.song.removeAttribute('style')
-            this.$emit("done") // This gets called too early -> some reference index is probably wrong
+          complete: async () => {
+            let song = $(this.$refs.song)
 
-            console.log(`Reset and removed style for card with title ${this.dataSongs[this.activeIndex].name}`)
-            console.log($(this.$refs.song).css("transform"))
+            // Stop animation here! Otherwise animation renders after resetting style causing glitches!
+            // Not working because .animate() is not called directly on 'song' selector but rather on javascript object
+            // song instance doesn't know it's currently animating
+            song.stop()
 
-            this.resetting = false
+            song.removeAttr('style')
+            this.$emit("done")
 
             this.degrees = 0
             this.margin[1] = 0
             this.margin[0] = 0
+
+            // Increment song index and request new songs if index reaches end of array
+            if (this.activeIndex + 1 >= this.dataSongs.length){
+              await this.updateRecommendations()
+
+              this.activeIndex = 0
+            } else {
+              this.activeIndex++
+            }
+
+            // Stop resetting here and wait for new recommendations if needed
+            this.resetting = false
+            console.log(this.activeIndex + ` ${this.dataSongs[this.activeIndex].name}`)
           },
           step: function (now, x) {
             switch (x.prop) {
