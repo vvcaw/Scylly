@@ -16,7 +16,7 @@ interface Spotify {
     fun authorize(code: String): UserRecord
     fun getCurrentUserProfile(accessToken: String): User // Change these to good data classes at some point
     fun getTopSongs(accessToken: String): List<Track> // Change these to good data classes at some point
-    fun getSongRecommendations(accessToken: String) : List<SongRecord>
+    fun getSongRecommendations(accessToken: String, amount: Int) : List<SongRecord>
 
     companion object{
         fun getInstance() : Spotify = SpotifyImplementation()
