@@ -50,7 +50,7 @@ export default {
     // http calls
     async updateRecommendations() {
       let res = await this.getRecommendations()
-      this.recommendations = res.data
+      this.dataSongs = res.data
     },
     getRecommendations() {
       return axios.get('/api/recommendations')
@@ -63,7 +63,11 @@ export default {
     },
 
     play() {
-      let audio = new Audio(this.songs[this.activeIndex].playUrl)
+      // Check if playUrl is valid
+      if (this.dataSongs[this.activeIndex].playUrl === "")
+        return
+
+      let audio = new Audio(this.dataSongs[this.activeIndex].playUrl)
 
       this.audio = audio
 
