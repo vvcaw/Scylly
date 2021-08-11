@@ -23,9 +23,10 @@
         </svg>
       </div>
     </div>
-    <!-- the v-show here is not necessary and could be removed -->
-    <Song ref="song" v-show="true" v-on:done="cycle(this.$refs.song, this.activeCard)" :card-num-prop="2" :songs="recommendations.slice(0, recommendations.length / 2)"/>
-    <Song ref="song2" v-show="true" v-on:done="cycle(this.$refs.song2, this.activeCard)" :card-num-prop="1" :songs="recommendations.slice(recommendations.length / 2, recommendations.length)"/>
+    <!-- the v-show here is not necessary and could be removed -- Number of cards is variable -->
+    <Song ref="song" v-show="true" v-on:done="cycle(this.$refs.song, this.activeCard)" :card-num-prop="3" :songs="cardArrays[0]"/>
+    <Song ref="song2" v-show="true" v-on:done="cycle(this.$refs.song2, this.activeCard)" :card-num-prop="2" :songs="cardArrays[1]"/>
+    <Song ref="song3" v-show="true" v-on:done="cycle(this.$refs.song3, this.activeCard)" :card-num-prop="1" :songs="cardArrays[2]"/>
   </div>
 </template>
 
@@ -43,14 +44,24 @@ export default {
       canClick: true,
       lastDirection: 0,
       recommendations: $javalin.state.recommendations,
+      numberOfCards: 3,
       activeCard: 0,
       secondCardActive: false,
       cards: []
     }
   },
+  computed: {
+    cardArrays: function () {
+      return new Array(Math.ceil(this.recommendations.length / this.numberOfCards))
+        .fill()
+        .map(_ => this.recommendations.splice(0, this.numberOfCards))
+    }
+  },
   mounted() {
+    // Add all cards to cards array
     this.cards.push(this.$refs.song)
     this.cards.push(this.$refs.song2)
+    this.cards.push(this.$refs.song3)
   },
   methods: {
     handleMouseOver(direction) {
