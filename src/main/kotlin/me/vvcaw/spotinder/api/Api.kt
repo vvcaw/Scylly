@@ -55,7 +55,7 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
                 val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
 
                 // Get users top songs
-                val recommendations = spotify.getSongRecommendations(user.accessToken)
+                val recommendations = spotify.getSongRecommendations(user.accessToken, 15)
 
                 // Hand over top songs
                 mapOf(
@@ -69,7 +69,7 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
             val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
 
             // Get users top songs
-            val recommendations = spotify.getSongRecommendations(user.accessToken)
+            val recommendations = spotify.getSongRecommendations(user.accessToken, 10)
 
             ctx.json(recommendations)
         }
