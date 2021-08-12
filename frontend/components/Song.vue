@@ -35,7 +35,8 @@ export default {
       activeDirection: 0,
       dataSongs: this.songs,
       audio: null,
-      playing: false
+      playing: false,
+      startedPlaying: false
     }
   },
   methods: {
@@ -49,8 +50,12 @@ export default {
 
     // http calls
     async updateRecommendations() {
+      await setTimeout(() => {
+      }, 10000) // For testing purposes
       let res = await this.getRecommendations()
       this.dataSongs = res.data
+
+      console.log("Recommendations were updated for card with title" + ` ${this.dataSongs[this.activeIndex].name}`)
     },
     getRecommendations() {
       return axios.get('/api/recommendations')
@@ -71,7 +76,14 @@ export default {
 
       this.audio = audio
 
-      audio.play()
+      audio.play().then(() => {
+        this.startedPlaying = true
+
+        if(!this.playing){
+          this.audio.pause()
+          this.startedPlaying = false
+        }
+      })
     },
     toggleActiveState(direction) {
       let card = $(this.$refs.song)
@@ -82,7 +94,7 @@ export default {
       if (this.resetting)
         return
 
-      if(!this.playing){
+      if (!this.playing) {
         this.play()
         this.playing = true
       }
@@ -158,7 +170,10 @@ export default {
       }
     },
     yeet(direction) {
-      this.audio.pause()
+      if (this.startedPlaying) {
+        this.startedPlaying = false
+        this.audio.pause()
+      }
       this.playing = false
 
       let card = $(this.$refs.song)
@@ -193,7 +208,7 @@ export default {
             this.margin[0] = 0
 
             // Increment song index and request new songs if index reaches end of array
-            if (this.activeIndex + 1 >= this.dataSongs.length){
+            if (this.activeIndex + 1 >= this.dataSongs.length) {
               await this.updateRecommendations()
 
               this.activeIndex = 0
@@ -203,7 +218,6 @@ export default {
 
             // Stop resetting here and wait for new recommendations if needed
             this.resetting = false
-            console.log(this.activeIndex + ` ${this.dataSongs[this.activeIndex].name}`)
           },
           step: function (now, x) {
             switch (x.prop) {
@@ -243,7 +257,7 @@ export default {
             this.margin[0] = 0
 
             // Increment song index and request new songs if index reaches end of array
-            if (this.activeIndex + 1 >= this.dataSongs.length){
+            if (this.activeIndex + 1 >= this.dataSongs.length) {
               await this.updateRecommendations()
 
               this.activeIndex = 0
