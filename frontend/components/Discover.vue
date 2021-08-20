@@ -24,9 +24,9 @@
       </div>
     </div>
     <!-- the v-show here is not necessary and could be removed -- Number of cards is variable -->
-    <Song ref="song" v-show="this.activeCard === 0" v-on:done="cycle(this.$refs.song, this.activeCard)" v-on:done-fetching="cardActiveState[0] = 1" :card-num-prop="3" :songs="cardArrays[0]"/>
-    <Song ref="song2" v-show="this.activeCard === 1" v-on:done="cycle(this.$refs.song2, this.activeCard)" v-on:done-fetching="cardActiveState[1] = 1" :card-num-prop="2" :songs="cardArrays[1]"/>
-    <Song ref="song3" v-show="this.activeCard === 2" v-on:done="cycle(this.$refs.song3, this.activeCard)" v-on:done-fetching="cardActiveState[2] = 1" :card-num-prop="1" :songs="cardArrays[2]"/>
+    <Song ref="song" v-show="this.activeCard === 0" v-on:done="cycle(this.$refs.song, this.activeCard)" :card-num-prop="3" :songs="cardArrays[0]"/>
+    <Song ref="song2" v-show="this.activeCard === 1" v-on:done="cycle(this.$refs.song2, this.activeCard)" :card-num-prop="2" :songs="cardArrays[1]"/>
+    <Song ref="song3" v-show="this.activeCard === 2" v-on:done="cycle(this.$refs.song3, this.activeCard)" :card-num-prop="1" :songs="cardArrays[2]"/>
   </div>
 </template>
 
@@ -48,7 +48,6 @@ export default {
       numberOfCards: 3,
       activeCard: 0,
       cards: [],
-      cardActiveState: [1, 1, 1]
     }
   },
   computed: {
