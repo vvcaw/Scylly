@@ -189,7 +189,15 @@ export default {
 
           // Increment song index and request new songs if index reaches end of array
           if (this.activeIndex + 1 >= this.dataSongs.length) {
-            await this.updateRecommendations()
+            this.updateRecommendations().then(() => {
+              this.degrees = 0
+              this.margin[1] = 0
+              this.margin[0] = 0
+
+              // Stop resetting here and wait for new recommendations if needed
+              // This needs to be called in a .then() callback, otherwise this assignment gets lost and unnoticed
+              this.resetting = false
+            })
 
             this.activeIndex = 0
           } else {
