@@ -2,7 +2,7 @@
   <div ref="song"
        v-bind:class="zIndex"
        class="absolute pointer-events-none z-10 mr-0 ml-0 p-4 bg-black border-2 border-solid h-96 w-72 rounded-md flex flex-col">
-    <img class="select-none rounded-md" :src="dataSongs[activeIndex].images[1]">
+    <img class="select-none rounded-md" :src="dataSongs[activeIndex].images[1]" alt="Song cover">
     <div class="h-full w-full flex flex-col items-start justify-center">
       <span class="select-none text-white font-medium text-2xl">{{ dataSongs[activeIndex].name }}</span>
       <span class="select-none text-gray-600 text-xl">{{ dataSongs[activeIndex].artists[0].name }}</span>
