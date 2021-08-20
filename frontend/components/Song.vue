@@ -32,7 +32,6 @@ export default {
       resetting: false,
       degrees: 0,
       margin: [0, 0],
-      activeDirection: 0,
       dataSongs: this.songs,
       audio: null,
       playing: false,
@@ -87,8 +86,6 @@ export default {
     toggleActiveState(direction) {
       let card = $(this.$refs.song)
       let vue = this;
-
-      this.activeDirection = direction
 
       if (this.resetting)
         return
