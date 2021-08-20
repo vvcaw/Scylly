@@ -84,11 +84,11 @@ export default {
       })
     },
     toggleActiveState(direction) {
-      let card = $(this.$refs.song)
-      let vue = this;
-
       if (this.resetting)
         return
+
+      let card = $(this.$refs.song)
+      let vue = this
 
       if (!this.playing) {
         this.play()
