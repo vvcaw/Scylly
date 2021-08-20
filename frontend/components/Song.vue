@@ -50,12 +50,10 @@ export default {
 
     // http calls
     async updateRecommendations() {
-      await setTimeout(() => {
-      }, 10000) // For testing purposes
       let res = await this.getRecommendations()
       this.dataSongs = res.data
 
-      console.log("Recommendations were updated for card with title" + ` ${this.dataSongs[this.activeIndex].name}`)
+      console.log("Recommendations were updated for card with title" + ` ${this.dataSongs[this.activeIndex].name} RESETTING: ${this.resetting}`)
     },
     getRecommendations() {
       return axios.get('/api/recommendations')
@@ -73,13 +71,14 @@ export default {
         return
 
       let audio = new Audio(this.dataSongs[this.activeIndex].playUrl)
+      audio.volume = 0.4;
 
       this.audio = audio
 
       audio.play().then(() => {
         this.startedPlaying = true
 
-        if(!this.playing){
+        if (!this.playing) {
           this.audio.pause()
           this.startedPlaying = false
         }
@@ -99,77 +98,58 @@ export default {
         this.playing = true
       }
 
+      let deg = 0;
+      let marginRight = 0;
+      let marginLeft = 0;
+
       if (direction === 0) {
-        $({deg: this.degrees, marginRight: this.margin[1], marginLeft: this.margin[0]}).animate({ /// YOU CANT CALL YEET BEFORE THIS ANIMATION IS FINISHED OBV.
-          deg: -10,
-          marginRight: 15,
-          marginLeft: 0
-        }, {
-          duration: 800,
-          easing: "easeOutExpo",
-          step: function (now, x) {
-            if (vue.resetting) {
-              $(this).stop()
-            }
-
-            switch (x.prop) {
-              case "deg":
-                card.css("transform", `rotate(${now}deg)`);
-                vue.degrees = now;
-                break;
-              case "marginLeft":
-                card.css(x.prop, `${now}rem`);
-                vue.margin[0] = now;
-                break;
-              case "marginRight":
-                card.css(x.prop, `${now}rem`);
-                vue.margin[1] = now;
-                break;
-            }
-          },
-        });
-
-        // Update values for next iteration
-        this.degrees = -10
-        this.margin[1] = 15
-        this.margin[0] = 0
+        deg = -10;
+        marginLeft = 0;
+        marginRight = 15;
       } else if (direction === 1) {
-        $({deg: this.degrees, marginLeft: this.margin[0], marginRight: this.margin[1]}).animate({
-          deg: 10,
-          marginLeft: 15,
-          marginRight: 0
-        }, {
-          duration: 800,
-          easing: "easeOutExpo",
-          step: function (now, x) {
-            if (vue.resetting) {
-              $(this).stop()
-            }
-
-            switch (x.prop) {
-              case "deg":
-                card.css("transform", `rotate(${now}deg)`);
-                vue.degrees = now;
-                break;
-              case "marginLeft":
-                card.css(x.prop, `${now}rem`);
-                vue.margin[0] = now;
-                break;
-              case "marginRight":
-                card.css(x.prop, `${now}rem`);
-                vue.margin[1] = now;
-                break;
-            }
-          }
-        });
-
-        // Update values for next iteration
-        this.degrees = 10
-        this.margin[1] = 0
-        this.margin[0] = 15
+        deg = 10;
+        marginLeft = 15;
+        marginRight = 0;
       }
+
+      $({deg: this.degrees, marginRight: this.margin[1], marginLeft: this.margin[0]}).animate({
+        deg: deg,
+        marginRight: marginRight,
+        marginLeft: marginLeft
+      }, {
+        duration: 800,
+        easing: "easeOutExpo",
+        step: function (now, x) {
+          if (vue.resetting) {
+            $(this).stop()
+          }
+
+          switch (x.prop) {
+            case "deg":
+              card.css("transform", `rotate(${now}deg)`);
+              vue.degrees = now;
+              break;
+            case "marginLeft":
+              card.css(x.prop, `${now}rem`);
+              vue.margin[0] = now;
+              break;
+            case "marginRight":
+              card.css(x.prop, `${now}rem`);
+              vue.margin[1] = now;
+              break;
+          }
+        },
+      });
+
+      // Update values for next iteration
+      this.degrees = deg
+      this.margin[1] = marginRight
+      this.margin[0] = marginLeft
     },
     yeet(direction) {
+      if (this.resetting)
+        return
+
       if (this.startedPlaying) {
         this.startedPlaying = false
         this.audio.pause()
@@ -178,109 +158,65 @@ export default {
 
       let card = $(this.$refs.song)
 
-      if (this.resetting)
-        return
+      let toAnimate = {}
+      let animationValues = {}
+
+      toAnimate.deg = this.degrees
+
+      animationValues.deg = 0
 
       if (direction === 0) {
-
-        // Hinder user from canceling animations
-        this.resetting = true
-
-        $({deg: this.degrees, marginRight: this.margin[1]}).animate({
-          deg: 0,
-          marginRight: (window.innerWidth + card.width())
-        }, {
-          duration: 300,
-          easing: "easeOutCirc",
-          complete: async () => {
-            let song = $(this.$refs.song)
-
-            // Stop animation here! Otherwise animation renders after resetting style causing glitches!
-            // Not working because .animate() is not called directly on 'song' selector but rather on javascript object
-            // song instance doesn't know it's currently animating
-            song.stop()
-
-            song.removeAttr('style')
-            this.$emit("done")
-
-            this.degrees = 0
-            this.margin[1] = 0
-            this.margin[0] = 0
-
-            // Increment song index and request new songs if index reaches end of array
-            if (this.activeIndex + 1 >= this.dataSongs.length) {
-              await this.updateRecommendations()
-
-              this.activeIndex = 0
-            } else {
-              this.activeIndex++
-            }
-
-            // Stop resetting here and wait for new recommendations if needed
-            this.resetting = false
-          },
-          step: function (now, x) {
-            switch (x.prop) {
-              case "deg":
-                card.css("transform", `rotate(${now}deg)`);
-                break;
-              case "marginRight":
-                card.css(x.prop, `${now}px`);
-                break;
-            }
-          },
-        });
+        toAnimate.marginRight = this.margin[1]
+        animationValues.marginRight = (window.innerWidth + card.width())
       } else if (direction === 1) {
-
-        // Hinder user from canceling animations
-        this.resetting = true
-
-        $({deg: this.degrees, marginLeft: this.margin[0]}).animate({
-          deg: 0,
-          marginLeft: (window.innerWidth + card.width())
-        }, {
-          duration: 300,
-          easing: "easeOutCirc",
-          complete: async () => {
-            let song = $(this.$refs.song)
-
-            // Stop animation here! Otherwise animation renders after resetting style causing glitches!
-            // Not working because .animate() is not called directly on 'song' selector but rather on javascript object
-            // song instance doesn't know it's currently animating
-            song.stop()
-
-            song.removeAttr('style')
-            this.$emit("done")
-
-            this.degrees = 0
-            this.margin[1] = 0
-            this.margin[0] = 0
-
-            // Increment song index and request new songs if index reaches end of array
-            if (this.activeIndex + 1 >= this.dataSongs.length) {
-              await this.updateRecommendations()
-
-              this.activeIndex = 0
-            } else {
-              this.activeIndex++
-            }
-
-            // Stop resetting here and wait for new recommendations if needed
-            this.resetting = false
-            console.log(this.activeIndex + ` ${this.dataSongs[this.activeIndex].name}`)
-          },
-          step: function (now, x) {
-            switch (x.prop) {
-              case "deg":
-                card.css("transform", `rotate(${now}deg)`);
-                break;
-              case "marginLeft":
-                card.css(x.prop, `${now}px`);
-                break;
-            }
-          },
-        });
+        toAnimate.marginLeft = this.margin[0]
+        animationValues.marginLeft = (window.innerWidth + card.width())
       }
+
+      // Hinder user from canceling animations
+      this.resetting = true
+
+      $(toAnimate).animate(animationValues, {
+        duration: 300,
+        easing: "easeOutCirc",
+        complete: async () => {
+          let song = $(this.$refs.song)
+
+          // Stop animation here! Otherwise animation renders after resetting style causing glitches!
+          // Not working because .animate() is not called directly on 'song' selector but rather on javascript object
+          // song instance doesn't know it's currently animating
+          song.stop()
+          song.removeAttr('style')
+
+          this.$emit("done")
+
+          // Increment song index and request new songs if index reaches end of array
+          if (this.activeIndex + 1 >= this.dataSongs.length) {
+            await this.updateRecommendations()
+
+            this.activeIndex = 0
+          } else {
+            this.activeIndex++
+          }
+
+          this.degrees = 0
+          this.margin[1] = 0
+          this.margin[0] = 0
+
+          // Stop resetting here and wait for new recommendations if needed
+          this.resetting = false
+        },
+        step: function (now, x) {
+          switch (x.prop) {
+            case "deg":
+              card.css("transform", `rotate(${now}deg)`);
+              break;
+            default:
+              card.css(x.prop, `${now}px`);
+              break;
+          }
+        },
+      });
     },
   }
 }
