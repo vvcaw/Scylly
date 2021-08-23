@@ -1,5 +1,6 @@
 package me.vvcaw.spotinder.api
 
+import com.wrapper.spotify.model_objects.specification.Track
 import de.elfsoft.javalin.vite.JavalinVite
 import de.elfsoft.javalin.vite.ViteHandler
 import io.javalin.Javalin
@@ -54,8 +55,10 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
 
                 val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
 
+                val topSongs = ctx.getTopSongs(user.accessToken, spotify)
+
                 // Get users top songs
-                val recommendations = spotify.getSongRecommendations(user.accessToken, 15)
+                val recommendations = spotify.getSongRecommendations(user.accessToken, 15, topSongs)
 
                 // Hand over top songs
                 mapOf(
@@ -68,10 +71,21 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
         app.get("/api/recommendations") { ctx ->
             val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
 
+            val topSongs = ctx.getTopSongs(user.accessToken, spotify)
+
             // Get users top songs
-            val recommendations = spotify.getSongRecommendations(user.accessToken, 10)
+            val recommendations = spotify.getSongRecommendations(user.accessToken, 10, topSongs)
 
             ctx.json(recommendations)
+        }
+    }
+
+    fun Context.getTopSongs(accessToken: String, spotify: Spotify) : List<Track> {
+        return this.sessionAttribute<List<Track>>("topSongs") ?: run {
+            val songs = spotify.getTopSongs(accessToken)
+
+            this.sessionAttribute("topSongs", songs)
+            songs
         }
     }
 }

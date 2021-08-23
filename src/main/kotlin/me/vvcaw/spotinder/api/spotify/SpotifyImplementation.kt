@@ -104,10 +104,8 @@ internal class SpotifyImplementation() : Spotify {
         return request?.execute()?.items?.toList() ?: throw BadRequestException()
     }
 
-    override fun getSongRecommendations(accessToken: String, amount: Int): List<SongRecord> {
+    override fun getSongRecommendations(accessToken: String, amount: Int, topSongs: List<Track>): List<SongRecord> {
         val userApi = getUserSpecificAPI(accessToken)
-
-        val topSongs = getTopSongs(accessToken)
 
         // Think about relevant collection and amount of requests to this endpoint due to less diverse song recommendations
         val topSongsArtistSeeds = topSongs.map { it.artists.first().id }.shuffled().subList(0, 1).joinToString(",")
