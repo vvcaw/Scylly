@@ -1,4 +1,8 @@
+# Jetbrains
 .idea
+
+# Sensitive data
+config.json
 
 # Compiled class file
 *.class
