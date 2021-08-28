@@ -55,10 +55,10 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
 
                 val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
 
-                val topSongs = ctx.getTopSongs(user.accessToken, spotify)
+                val topSongs = ctx.getTopSongs(user.accessToken, user.refreshToken, spotify)
 
                 // Get users top songs
-                val recommendations = spotify.getSongRecommendations(user.accessToken, 15, topSongs)
+                val recommendations = spotify.getSongRecommendations(user.accessToken, user.refreshToken,15, topSongs)
 
                 // Hand over top songs
                 mapOf(
@@ -71,18 +71,18 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
         app.get("/api/recommendations") { ctx ->
             val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
 
-            val topSongs = ctx.getTopSongs(user.accessToken, spotify)
+            val topSongs = ctx.getTopSongs(user.accessToken, user.refreshToken, spotify)
 
             // Get users top songs
-            val recommendations = spotify.getSongRecommendations(user.accessToken, 10, topSongs)
+            val recommendations = spotify.getSongRecommendations(user.accessToken, user.refreshToken,10, topSongs)
 
             ctx.json(recommendations)
         }
     }
 
-    fun Context.getTopSongs(accessToken: String, spotify: Spotify) : List<Track> {
+    fun Context.getTopSongs(accessToken: String, refreshToken: String, spotify: Spotify) : List<Track> {
         return this.sessionAttribute<List<Track>>("topSongs") ?: run {
-            val songs = spotify.getTopSongs(accessToken)
+            val songs = spotify.getTopSongs(accessToken, refreshToken)
 
             this.sessionAttribute("topSongs", songs)
             songs
