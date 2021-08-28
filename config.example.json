@@ -1,0 +1,5 @@
+{
+  "client-id": "some client id",
+  "client-secret": "some client secret",
+  "redirect-uri": "some redirect uri"
+}
