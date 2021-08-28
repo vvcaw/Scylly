@@ -3,6 +3,7 @@ package me.vvcaw.spotinder.data
 // API
 data class SearchRequest(val name: String)
 data class AddRequest(val songs: List<SongRecord>)
+data class ClientData(val clientId: String, val clientSecret: String, val redirectURI: String)
 
 // Spotify
 data class UserRecord(
