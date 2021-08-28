@@ -11,9 +11,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "vue": "^3.0.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@headlessui/vue": "^1.2.0",
     "@vitejs/plugin-vue": "^1.2.3",
@@ -28,6 +26,7 @@
     "rollup-plugin-cleaner": "^1.0.0",
     "tailwindcss": "^2.1.4",
     "vite": "^2.3.3",
+    "vue": "^3.2.6",
     "vue-debounce": "^2.6.0"
   }
 }
