@@ -1,7 +1,7 @@
 <template>
   <div ref="song"
        v-bind:class="zIndex"
-       class="absolute pointer-events-none z-10 mr-0 ml-0 p-4 bg-black border-2 border-solid h-96 w-72 rounded-md flex flex-col">
+       class="absolute pointer-events-none z-10 mr-0 ml-0 p-4 bg-black border-2 border-solid h-80 w-64 md:h-96 md:w-72 rounded-md flex flex-col">
     <img class="select-none rounded-md" :src="dataSongs[activeIndex].images[1]" alt="Song cover">
     <div class="h-full w-full flex flex-col items-start justify-center">
       <span class="select-none text-white font-medium text-2xl">{{ dataSongs[activeIndex].name }}</span>

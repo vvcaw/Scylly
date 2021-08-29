@@ -5,8 +5,8 @@
 
     <div class="bg-black h-full grid grid-cols-2 w-full absolute items-center justify-center">
       <div v-on:mouseenter="handleMouseOver(0)" v-on:click="yeet(0)" ref="no"
-           class="group bg-black border-r-2 border-solid border-opacity-20 cursor-pointer h-full w-full flex items-center justify-center hover:bg-gray-900">
-        <svg xmlns="http://www.w3.org/2000/svg" class="text-spotifyRed group-hover:animate-pulse h-48 w-48"
+           class="group bg-black border-r-2 border-solid border-opacity-20 cursor-pointer h-full w-full flex items-end md:items-center justify-center hover:bg-gray-900">
+        <svg xmlns="http://www.w3.org/2000/svg" class="md:mb-0 mb-32 text-spotifyRed group-hover:animate-pulse h-24 w-24 md:h-48 md:w-48"
              viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd"
                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -14,8 +14,8 @@
         </svg>
       </div>
       <div v-on:mouseenter="handleMouseOver(1)" v-on:click="yeet(1)" ref="yes"
-           class="group bg-black border-l-1 border-solid border-opacity-20 cursor-pointer h-full w-full flex items-center justify-center  hover:bg-gray-900">
-        <svg xmlns="http://www.w3.org/2000/svg" class="text-spotify group-hover:animate-pulse h-48 w-48"
+           class="group bg-black border-l-1 border-solid border-opacity-20 cursor-pointer h-full w-full flex items-end md:items-center justify-center  hover:bg-gray-900">
+        <svg xmlns="http://www.w3.org/2000/svg" class="md:mb-0 mb-32 text-spotify group-hover:animate-pulse h-24 w-24 md:h-48 md:w-48"
              viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd"
                 d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
@@ -24,9 +24,9 @@
       </div>
     </div>
     <!-- the v-show here is not necessary and could be removed -- Number of cards is variable -->
-    <Song ref="song" v-show="this.activeCard === 0" v-on:done="cycle(this.$refs.song, this.activeCard)" :card-num-prop="3" :songs="cardArrays[0]"/>
-    <Song ref="song2" v-show="this.activeCard === 1" v-on:done="cycle(this.$refs.song2, this.activeCard)" :card-num-prop="2" :songs="cardArrays[1]"/>
-    <Song ref="song3" v-show="this.activeCard === 2" v-on:done="cycle(this.$refs.song3, this.activeCard)" :card-num-prop="1" :songs="cardArrays[2]"/>
+    <Song ref="song" class="mb-20 md:bm-0" v-show="this.activeCard === 0" v-on:done="cycle(this.$refs.song, this.activeCard)" :card-num-prop="3" :songs="cardArrays[0]"/>
+    <Song ref="song2" class="mb-20 md:bm-0" v-show="this.activeCard === 1" v-on:done="cycle(this.$refs.song2, this.activeCard)" :card-num-prop="2" :songs="cardArrays[1]"/>
+    <Song ref="song3" class="mb-20 md:bm-0" v-show="this.activeCard === 2" v-on:done="cycle(this.$refs.song3, this.activeCard)" :card-num-prop="1" :songs="cardArrays[2]"/>
   </div>
 </template>
 
