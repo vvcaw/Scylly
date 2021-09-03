@@ -4,11 +4,13 @@
        class="absolute pointer-events-none z-10 mr-0 ml-0 p-4 bg-black border-2 border-solid h-80 w-64 md:h-96 md:w-72 rounded-md flex flex-col">
     <img class="select-none rounded-md" :src="dataSongs[activeIndex].images[1]" alt="Song cover">
     <div class="h-full w-full flex flex-col items-start justify-center">
-      <div v-if="dataSongs[activeIndex].explicit" class="mt-1 rounded-md pl-1 pr-1 bg-gray-900">
-        <span class="select-none text-gray-300 text-sm">EXPLICIT</span>
+      <div class="flex flex-row-reverse md:flex-col h-full w-full justify-end gap-1 md:gap-0 md:justify-center items-center md:items-start">
+        <div v-if="dataSongs[activeIndex].explicit" class="mt-2 md:mt-1 rounded-md pl-1 pr-1 bg-gray-900">
+          <span class="select-none text-gray-300 text-sm">EXPLICIT</span>
+        </div>
+        <span class="mt-2 md:mt-0 select-none text-white font-medium text-2xl md:text-2xl">{{ dataSongs[activeIndex].name }}</span>
       </div>
-      <span class="select-none text-white font-medium text-2xl">{{ dataSongs[activeIndex].name }}</span>
-      <span class="select-none text-gray-600 text-xl">{{ dataSongs[activeIndex].artists[0].name }}</span>
+      <span class="select-none text-gray-600 text-xl md:text-xl">{{ dataSongs[activeIndex].artists[0].name }}</span>
     </div>
   </div>
 </template>
