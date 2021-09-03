@@ -252,11 +252,13 @@ export default {
       animationValues.deg = 0
 
       if (direction === 0) {
+        animationValues.deg = -10;
         toAnimate.marginRight = this.margin[1]
-        animationValues.marginRight = (window.innerWidth * 2 + card.width())
+        animationValues.marginRight = (window.innerWidth * 1.2 + card.width())
       } else if (direction === 1) {
+        animationValues.deg = 10;
         toAnimate.marginLeft = this.margin[0]
-        animationValues.marginLeft = (window.innerWidth * 2 + card.width())
+        animationValues.marginLeft = (window.innerWidth * 1.2 + card.width())
       }
 
       // Hinder user from canceling animations
