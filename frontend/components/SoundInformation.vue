@@ -10,7 +10,7 @@
 
       </div>
       <p class="text-gray-300 text-md md:text-xl text-center font-medium">This website shows recommendations based on your favourite songs this month</p>
-      <div class="w-full flex md:flex-row flex-col items-center justify-center">
+      <div class="w-full flex md:flex-row-reverse flex-col items-center justify-center">
         <div class="flex w-full h-full md:w-10/12 md:items-start items-center justify-center">
           <div class="flex md:flex-col flex-row w-5/6 items-center justify-start gap-y-3 md:mb-5 md:mt-5">
             <div class="rounded-full mr-2 md:mr-0 md:p-3 p-2 bg-gray-300">
