@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="w-full flex-row justify-between">
-        <span class="select-none text-gray-600 text-xl md:text-xl">{{ dataSongs[activeIndex].artists[0].name }}</span>
+        <span class="select-none overflow-ellipsis truncate text-gray-600 text-xl md:text-xl">{{ dataSongs[activeIndex].artists[0].name }}</span>
         <div class="w-1"></div>
       </div>
     </div>
