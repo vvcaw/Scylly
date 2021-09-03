@@ -232,6 +232,86 @@ export default {
         },
       });
     },
+    yeetMobile(direction) {
+      if (this.resetting)
+        return
+
+      if (this.startedPlaying) {
+        this.startedPlaying = false
+        this.audio.pause()
+      }
+      this.playing = false
+
+      let card = $(this.$refs.song)
+
+      let toAnimate = {}
+      let animationValues = {}
+
+      toAnimate.deg = this.degrees
+
+      animationValues.deg = 0
+
+      if (direction === 0) {
+        toAnimate.marginRight = this.margin[1]
+        animationValues.marginRight = (window.innerWidth * 2 + card.width())
+      } else if (direction === 1) {
+        toAnimate.marginLeft = this.margin[0]
+        animationValues.marginLeft = (window.innerWidth * 2 + card.width())
+      }
+
+      // Hinder user from canceling animations
+      this.resetting = true
+
+      $(toAnimate).animate(animationValues, {
+        duration: 300,
+        easing: "easeOutCirc",
+        complete: async () => {
+          let song = $(this.$refs.song)
+
+          // Stop animation here! Otherwise animation renders after resetting style causing glitches!
+          // Not working because .animate() is not called directly on 'song' selector but rather on javascript object
+          // song instance doesn't know it's currently animating
+          song.stop()
+          song.removeAttr('style')
+
+          this.$emit("done")
+
+          // Increment song index and request new songs if index reaches end of array
+          if (this.activeIndex + 1 >= this.dataSongs.length) {
+            this.updateRecommendations().then(() => {
+              this.degrees = 0
+              this.margin[1] = 0
+              this.margin[0] = 0
+
+              // Stop resetting here and wait for new recommendations if needed
+              // This needs to be called in a .then() callback, otherwise this assignment gets lost and unnoticed
+              this.resetting = false
+            })
+
+            this.activeIndex = 0
+          } else {
+            this.activeIndex++
+          }
+
+          this.degrees = 0
+          this.margin[1] = 0
+          this.margin[0] = 0
+
+          // Stop resetting here and wait for new recommendations if needed
+          this.resetting = false
+        },
+        step: function (now, x) {
+          switch (x.prop) {
+            case "deg":
+              card.css("transform", `rotate(${now}deg)`);
+              break;
+            default:
+              card.css(x.prop, `${now}px`);
+              break;
+          }
+        },
+      });
+    },
   }
 }
 </script>

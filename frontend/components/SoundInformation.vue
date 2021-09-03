@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <button v-on:click="visible = false" class="shadow-md bg-spotify md:p-3 p-2 text-white font-medium rounded-md">Understood</button>
+      <button v-on:click="handleClick" class="shadow-md bg-spotify md:p-3 p-2 text-white font-medium rounded-md">Understood</button>
     </div>
   </div>
 </template>
@@ -45,6 +45,13 @@ export default {
   data() {
     return {
       visible: true
+    }
+  },
+  methods: {
+    handleClick() {
+      this.$emit("done")
+
+      this.visible = false
     }
   }
 }
