@@ -8,10 +8,14 @@
         <div v-if="dataSongs[activeIndex].explicit" class="mt-2 md:mt-1 rounded-md pl-1 pr-1 bg-gray-900">
           <span class="select-none text-gray-300 text-sm">EXPLICIT</span>
         </div>
-        <span class="mt-2 md:mt-0 select-none text-white font-medium text-2xl md:text-2xl overflow-ellipsis truncate">{{ dataSongs[activeIndex].name }}</span>
+        <div class="w-full flex flex-row justify-between">
+          <span class="mt-2 md:mt-0 select-none text-white font-medium text-2xl md:text-2xl overflow-ellipsis truncate">{{ dataSongs[activeIndex].name }}</span>
+          <div class="w-1"></div>
+        </div>
       </div>
-      <div class="w-full">
+      <div class="w-full flex-row justify-between">
         <span class="select-none text-gray-600 text-xl md:text-xl">{{ dataSongs[activeIndex].artists[0].name }}</span>
+        <div class="w-1"></div>
       </div>
     </div>
   </div>
