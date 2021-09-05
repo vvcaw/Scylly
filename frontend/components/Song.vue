@@ -50,7 +50,8 @@ export default {
       dataSongs: this.songs,
       audio: null,
       playing: false,
-      startedPlaying: false
+      startedPlaying: false,
+      volume: 0.3
     }
   },
   methods: {
@@ -60,6 +61,20 @@ export default {
     },
     setCardNum(newNum) {
       this.cardNum = newNum
+    },
+    changeVolume(value) {
+      let newVolume = this.volume * 10
+      newVolume = ((newVolume + value) / 10)
+
+      console.log(newVolume)
+
+      if (newVolume > 0 && newVolume < 1) {
+        this.volume = newVolume
+      }
+
+      if (this.playing || this.startedPlaying) {
+        this.audio.volume = this.volume
+      }
     },
 
     // http calls
@@ -85,7 +100,7 @@ export default {
         return
 
       let audio = new Audio(this.dataSongs[this.activeIndex].playUrl)
-      audio.volume = 0.4;
+      audio.volume = this.volume;
 
       this.audio = audio
 

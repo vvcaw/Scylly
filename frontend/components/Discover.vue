@@ -2,6 +2,7 @@
   <div class="flex items-center w-full h-screen justify-center z-10">
 
     <ReturnArrow/>
+    <VolumeRocker v-on:minus="changeVolume(-1)" v-on:plus="changeVolume(1)"/>
     <SoundInformation v-on:done="handleUserValidated"/>
 
     <div class="bg-black h-full grid grid-cols-2 w-full absolute items-center justify-center">
@@ -59,10 +60,11 @@ import jQuery from "jquery";
 import SoundInformation from "./SoundInformation.vue";
 import { easings } from "../assets/easings";
 import ReturnArrow from "./ReturnArrow.vue";
+import VolumeRocker from "./VolumeRocker.vue";
 
 export default {
   name: "Discover",
-  components: {ReturnArrow, SoundInformation, Song},
+  components: {VolumeRocker, ReturnArrow, SoundInformation, Song},
   data() {
     return {
       canClick: true,
@@ -95,6 +97,11 @@ export default {
     }
   },
   methods: {
+    changeVolume(value) {
+      this.cards.forEach((card) => {
+        card.changeVolume(value)
+      })
+    },
     handleMouseOver(direction) {
       this.toggleActiveState(direction)
 
