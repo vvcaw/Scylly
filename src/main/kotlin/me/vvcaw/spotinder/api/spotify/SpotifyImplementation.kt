@@ -33,7 +33,7 @@ internal class SpotifyImplementation(clientData: ClientData) : Spotify {
         .build()
 
     private val authorizationCodeUriRequest = api.authorizationCodeUri()
-        .scope("user-read-recently-played user-top-read")
+        .scope("user-top-read")
         .redirect_uri(redirectURI)
         .show_dialog(true)
         .build()
@@ -90,12 +90,7 @@ internal class SpotifyImplementation(clientData: ClientData) : Spotify {
             val refreshToken = authorizationCodeCredentials.refreshToken
             val expiresIn = authorizationCodeCredentials.expiresIn + (System.currentTimeMillis() / 1000) - 10
 
-            val userProfile = getCurrentUserProfile(accessToken, refreshToken)
-            val profilePictures = userProfile.images.map { it.url }
-            val displayName = userProfile.displayName
-            val username = userProfile.id
-
-            return UserRecord(username, refreshToken, accessToken, expiresIn, profilePictures, displayName)
+            return UserRecord(refreshToken, accessToken, expiresIn)
         } catch (e: Exception) {
             e.printStackTrace()
 
@@ -152,7 +147,7 @@ internal class SpotifyImplementation(clientData: ClientData) : Spotify {
         val credentials = updateToken.execute()
         val expiresIn = credentials.expiresIn + (System.currentTimeMillis() / 1000) - 10
 
-        return UserRecord(u.username, u.refreshToken, credentials.accessToken, expiresIn, u.profilePictures, u.displayName)
+        return UserRecord(u.refreshToken, credentials.accessToken, expiresIn)
     }
 
     private fun getTrack(songId: String, accessToken: String, refreshToken: String): Track {

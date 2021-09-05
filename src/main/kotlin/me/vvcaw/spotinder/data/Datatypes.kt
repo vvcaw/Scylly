@@ -1,18 +1,14 @@
 package me.vvcaw.spotinder.data
 
 // API
-data class SearchRequest(val name: String)
 data class AddRequest(val songs: List<SongRecord>)
 data class ClientData(val clientId: String, val clientSecret: String, val redirectURI: String)
 
 // Spotify
 data class UserRecord(
-    val username: String,
     val refreshToken: String, // Should not be emitted like ever
     val accessToken: String, // Should not be emitted like ever
     val expiresAt: Long,
-    val profilePictures: List<String>,
-    val displayName: String
 )
 
 // UserSongSocket
