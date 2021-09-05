@@ -1,6 +1,7 @@
 <template>
   <div class="flex items-center w-full h-screen justify-center z-10">
 
+    <ReturnArrow/>
     <SoundInformation v-on:done="handleUserValidated"/>
 
     <div class="bg-black h-full grid grid-cols-2 w-full absolute items-center justify-center">
@@ -57,10 +58,11 @@ import $ from "jquery";
 import jQuery from "jquery";
 import SoundInformation from "./SoundInformation.vue";
 import { easings } from "../assets/easings";
+import ReturnArrow from "./ReturnArrow.vue";
 
 export default {
   name: "Discover",
-  components: {SoundInformation, Song},
+  components: {ReturnArrow, SoundInformation, Song},
   data() {
     return {
       canClick: true,
