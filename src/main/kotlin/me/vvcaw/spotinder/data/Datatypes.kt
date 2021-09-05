@@ -10,6 +10,7 @@ data class UserRecord(
     val username: String,
     val refreshToken: String, // Should not be emitted like ever
     val accessToken: String, // Should not be emitted like ever
+    val expiresAt: Long,
     val profilePictures: List<String>,
     val displayName: String
 )

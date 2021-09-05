@@ -6,8 +6,6 @@ import de.elfsoft.javalin.vite.ViteHandler
 import io.javalin.Javalin
 import io.javalin.http.*
 import me.vvcaw.spotinder.api.spotify.Spotify
-import me.vvcaw.spotinder.api.spotify.toSongRecords
-import me.vvcaw.spotinder.data.AddRequest
 import me.vvcaw.spotinder.data.UserRecord
 
 class Api(spotify: Spotify, isDev: Boolean, port: Int) {
@@ -52,8 +50,14 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
 
         app.get("/discover",
             ViteHandler("pages/discover.js") { ctx ->
+                var user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
+                val validateUser = validateAccessToken(user, spotify)
 
-                val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
+                if (validateUser != null) {
+                    println("Updated $user to $validateUser because the access token expired!")
+                    user = validateUser
+                    ctx.sessionAttribute("user", validateUser)
+                }
 
                 val topSongs = ctx.getTopSongs(user.accessToken, user.refreshToken, spotify)
 
@@ -69,7 +73,14 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
         )
 
         app.get("/api/recommendations") { ctx ->
-            val user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
+            var user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
+            val validateUser = validateAccessToken(user, spotify)
+
+            if (validateUser != null) {
+                println("Updated $user to $validateUser because the access token expired!")
+                user = validateUser
+                ctx.sessionAttribute("user", validateUser)
+            }
 
             val topSongs = ctx.getTopSongs(user.accessToken, user.refreshToken, spotify)
 
@@ -80,6 +91,16 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
         }
     }
 
+    // Check if a user's access token is still valid and update if it isn't
+    private fun validateAccessToken(u: UserRecord, spotify: Spotify): UserRecord? {
+        if (u.expiresAt < (System.currentTimeMillis() / 1000)) {
+            return spotify.refreshAccessToken(u)
+        }
+
+        return null
+    }
+
+    // These might need to be updated more often - If session is really long > 2 weeks or some stuff
     fun Context.getTopSongs(accessToken: String, refreshToken: String, spotify: Spotify) : List<Track> {
         return this.sessionAttribute<List<Track>>("topSongs") ?: run {
             val songs = spotify.getTopSongs(accessToken, refreshToken)
