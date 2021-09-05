@@ -5,19 +5,21 @@
     <img class="select-none rounded-md" :src="dataSongs[activeIndex].images[1]" alt="Song cover">
     <div class="h-full w-full flex flex-col items-start justify-center">
       <div class="flex flex-row-reverse md:flex-col h-full w-full justify-end gap-1 md:gap-0 md:justify-center items-center md:items-start">
-        <div v-if="dataSongs[activeIndex].explicit" class="mt-2 md:mt-1 rounded-md pl-1 pr-1 bg-gray-900">
+        <div v-if="dataSongs[activeIndex].explicit" class="mt-2 w-auto md:mt-1 rounded-md pl-1 pr-1 bg-gray-900">
           <span class="select-none text-gray-300 text-sm">EXPLICIT</span>
         </div>
         <div class="hidden md:flex w-full flex-row">
           <span class="mt-2 md:mt-0 select-none text-white font-medium text-md md:text-2xl overflow-ellipsis truncate">{{ dataSongs[activeIndex].name }}</span>
-          <div v-if="true" class="w-1"></div>
+          <div class="w-1"></div>
         </div>
-        <span class="inline-block md:hidden mt-2 md:mt-0 select-none text-white font-medium text-md md:text-2xl overflow-ellipsis truncate">{{ dataSongs[activeIndex].name }}</span>
         <div v-if="!dataSongs[activeIndex].explicit" class="inline-block md:hidden w-1"></div>
+        <span class="inline-block md:hidden mt-2 md:mt-0 select-none text-white font-medium text-md md:text-2xl overflow-ellipsis truncate">{{ dataSongs[activeIndex].name }}</span>
       </div>
-      <div class="w-full flex-row justify-between">
+      <div class="w-full flex flex-row justify-between">
         <span class="select-none overflow-ellipsis truncate text-gray-600 text-sm md:text-xl">{{ dataSongs[activeIndex].artists[0].name }}</span>
-        <div class="w-1"></div>
+        <div class="h-5 w-5 md:h-7 md:w-7">
+          <img src="../assets/icons/Spotify_Icon_RGB_Green.png">
+        </div>
       </div>
     </div>
   </div>
