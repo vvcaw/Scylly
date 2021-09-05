@@ -16,7 +16,7 @@
         <span class="inline-block md:hidden mt-2 md:mt-0 select-none text-white font-medium text-md md:text-2xl overflow-ellipsis truncate">{{ dataSongs[activeIndex].name }}</span>
       </div>
       <div class="w-full flex flex-row justify-between">
-        <span class="select-none overflow-ellipsis truncate text-gray-600 text-sm md:text-xl">{{ dataSongs[activeIndex].artists[0].name }}</span>
+        <span class="select-none overflow-ellipsis truncate text-gray-600 text-sm w-10/12 md:text-xl">{{ dataSongs[activeIndex].artists[0].name }}</span>
         <div class="h-5 w-5 md:h-7 md:w-7">
           <img src="../assets/icons/Spotify_Icon_RGB_Green.png">
         </div>
