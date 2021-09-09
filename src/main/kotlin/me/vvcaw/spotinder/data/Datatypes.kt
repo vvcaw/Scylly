@@ -16,6 +16,7 @@ data class UserRecord(
 
 // Complex
 data class SongRecord(
+    val id: String,
     val name: String,
     val artists: List<SimplifiedArtistRecord>,
     val images: List<String>,

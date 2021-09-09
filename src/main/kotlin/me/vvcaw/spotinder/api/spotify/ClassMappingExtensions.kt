@@ -13,6 +13,7 @@ fun ArtistSimplified.toSimplifiedArtistRecord() = SimplifiedArtistRecord(
 )
 
 fun Track.toSongRecord() = SongRecord(
+    id = id,
     name = name,
     artists = artists.toList().toSimplifiedArtistRecords(),
     images = (album.images.toList()).toStrings(),

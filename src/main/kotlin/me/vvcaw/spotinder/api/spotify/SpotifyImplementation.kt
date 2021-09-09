@@ -33,7 +33,7 @@ internal class SpotifyImplementation(clientData: ClientData) : Spotify {
         .build()
 
     private val authorizationCodeUriRequest = api.authorizationCodeUri()
-        .scope("user-top-read")
+        .scope("user-top-read user-library-modify")
         .redirect_uri(redirectURI)
         .show_dialog(true)
         .build()
@@ -118,7 +118,12 @@ internal class SpotifyImplementation(clientData: ClientData) : Spotify {
         return request?.execute()?.items?.toList() ?: throw BadRequestException()
     }
 
-    override fun getSongRecommendations(accessToken: String, refreshToken: String, amount: Int, topSongs: List<Track>): List<SongRecord> {
+    override fun getSongRecommendations(
+        accessToken: String,
+        refreshToken: String,
+        amount: Int,
+        topSongs: List<Track>
+    ): List<SongRecord> {
         val userApi = getUserSpecificAPI(accessToken, refreshToken)
 
         // Think about relevant collection and amount of requests to this endpoint due to less diverse song recommendations
@@ -131,12 +136,22 @@ internal class SpotifyImplementation(clientData: ClientData) : Spotify {
             ?.seed_tracks(topSongsTrackSeeds)
             ?.build()
 
-        val songs = request?.execute()?.tracks?.mapNotNull { getTrack(it.id, accessToken, refreshToken) } ?: throw BadRequestException()
+        val songs = request?.execute()?.tracks?.mapNotNull { getTrack(it.id, accessToken, refreshToken) }
+            ?: throw BadRequestException()
 
         return songs.toSongRecords()
     }
 
-    override fun refreshAccessToken(u: UserRecord) : UserRecord {
+    override fun likeSong(accessToken: String, refreshToken: String, id: String) {
+        val userApi = getUserSpecificAPI(accessToken, refreshToken)
+
+        val request = userApi.saveTracksForUser(id)
+            .build()
+
+        request.execute()
+    }
+
+    override fun refreshAccessToken(u: UserRecord): UserRecord {
         val userApi = getUserSpecificAPI(u.accessToken, u.refreshToken)
 
         val updateToken = userApi.authorizationCodeRefresh()

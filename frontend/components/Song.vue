@@ -94,6 +94,10 @@ export default {
           })
     },
 
+    like() {
+      axios.post(`/api/like/${this.dataSongs[this.activeIndex].id}`)
+      console.log(`liked song with id ${this.dataSongs[this.activeIndex].id}`)
+    },
     play() {
       // Check if playUrl is valid
       if (this.dataSongs[this.activeIndex].playUrl === "")
@@ -196,6 +200,7 @@ export default {
         toAnimate.marginRight = this.margin[1]
         animationValues.marginRight = (window.innerWidth + card.width())
       } else if (direction === 1) {
+        this.like()
         toAnimate.marginLeft = this.margin[0]
         animationValues.marginLeft = (window.innerWidth + card.width())
       }
@@ -277,6 +282,7 @@ export default {
         toAnimate.marginRight = this.margin[1]
         animationValues.marginRight = (window.innerWidth * 1.2 + card.width())
       } else if (direction === 1) {
+        this.like()
         animationValues.deg = 10;
         toAnimate.marginLeft = this.margin[0]
         animationValues.marginLeft = (window.innerWidth * 1.2 + card.width())

@@ -18,6 +18,7 @@ interface Spotify {
     fun getCurrentUserProfile(accessToken: String, refreshToken: String): User // Change these to good data classes at some point
     fun getTopSongs(accessToken: String, refreshToken: String): List<Track> // Change these to good data classes at some point
     fun getSongRecommendations(accessToken: String, refreshToken: String, amount: Int, topSongs: List<Track>) : List<SongRecord>
+    fun likeSong(accessToken: String, refreshToken: String, id: String)
     fun refreshAccessToken(u: UserRecord) : UserRecord
 
     companion object{

@@ -89,6 +89,19 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
 
             ctx.json(recommendations)
         }
+
+        app.post("/api/like/:song_id") { ctx ->
+            var user = ctx.sessionAttribute<UserRecord>("user") ?: throw UnauthorizedResponse()
+            val validateUser = validateAccessToken(user, spotify)
+
+            if (validateUser != null) {
+                println("Updated $user to $validateUser because the access token expired!")
+                user = validateUser
+                ctx.sessionAttribute("user", validateUser)
+            }
+
+            spotify.likeSong(user.accessToken, user.refreshToken, ctx.pathParam("song_id"))
+        }
     }
 
     // Check if a user's access token is still valid and update if it isn't
