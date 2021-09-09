@@ -59,10 +59,10 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
                     ctx.sessionAttribute("user", validateUser)
                 }
 
-                val topSongs = ctx.getTopSongs(user.accessToken, user.refreshToken, spotify)
+                val topSongs = ctx.getTopSongs(user, spotify)
 
                 // Get users top songs
-                val recommendations = spotify.getSongRecommendations(user.accessToken, user.refreshToken,15, topSongs)
+                val recommendations = spotify.getSongRecommendations(user.accessToken, user.refreshToken, 15, topSongs)
 
                 // Hand over top songs
                 mapOf(
@@ -82,10 +82,10 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
                 ctx.sessionAttribute("user", validateUser)
             }
 
-            val topSongs = ctx.getTopSongs(user.accessToken, user.refreshToken, spotify)
+            val topSongs = ctx.getTopSongs(user, spotify)
 
             // Get users top songs
-            val recommendations = spotify.getSongRecommendations(user.accessToken, user.refreshToken,10, topSongs)
+            val recommendations = spotify.getSongRecommendations(user.accessToken, user.refreshToken, 10, topSongs)
 
             ctx.json(recommendations)
         }
@@ -101,12 +101,23 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
     }
 
     // These might need to be updated more often - If session is really long > 2 weeks or some stuff
-    fun Context.getTopSongs(accessToken: String, refreshToken: String, spotify: Spotify) : List<Track> {
-        return this.sessionAttribute<List<Track>>("topSongs") ?: run {
-            val songs = spotify.getTopSongs(accessToken, refreshToken)
+    fun Context.getTopSongs(user: UserRecord, spotify: Spotify): List<Track> {
+        val topSongs = this.sessionAttribute<List<Track>>("topSongs")
+        val currentTimeSeconds = System.currentTimeMillis() / 1000
 
+        return if (user.refreshTopSongs < currentTimeSeconds || topSongs == null) {
+            val songs = spotify.getTopSongs(user.accessToken, user.refreshToken)
+
+            // Update user to keep track on when to refresh songs again
             this.sessionAttribute("topSongs", songs)
+
+            // Update songs after 1 week
+            val newUser = UserRecord(user.refreshToken, user.accessToken, user.expiresAt, currentTimeSeconds + 604800)
+            this.sessionAttribute("user", newUser)
+            println("Updated top songs for user $user")
             songs
+        } else {
+            topSongs
         }
     }
 }

@@ -90,7 +90,7 @@ internal class SpotifyImplementation(clientData: ClientData) : Spotify {
             val refreshToken = authorizationCodeCredentials.refreshToken
             val expiresIn = authorizationCodeCredentials.expiresIn + (System.currentTimeMillis() / 1000) - 10
 
-            return UserRecord(refreshToken, accessToken, expiresIn)
+            return UserRecord(refreshToken, accessToken, expiresIn, 0)
         } catch (e: Exception) {
             e.printStackTrace()
 
@@ -147,7 +147,7 @@ internal class SpotifyImplementation(clientData: ClientData) : Spotify {
         val credentials = updateToken.execute()
         val expiresIn = credentials.expiresIn + (System.currentTimeMillis() / 1000) - 10
 
-        return UserRecord(u.refreshToken, credentials.accessToken, expiresIn)
+        return UserRecord(u.refreshToken, credentials.accessToken, expiresIn, u.refreshTopSongs)
     }
 
     private fun getTrack(songId: String, accessToken: String, refreshToken: String): Track {

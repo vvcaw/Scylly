@@ -9,6 +9,7 @@ data class UserRecord(
     val refreshToken: String, // Should not be emitted like ever
     val accessToken: String, // Should not be emitted like ever
     val expiresAt: Long,
+    val refreshTopSongs: Long
 )
 
 // UserSongSocket
