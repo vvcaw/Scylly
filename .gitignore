@@ -2,6 +2,7 @@
 .idea
 
 # Sensitive data
+src/main/resources/config.json
 config.json
 
 # Compiled class file
