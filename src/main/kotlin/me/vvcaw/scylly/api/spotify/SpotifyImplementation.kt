@@ -1,19 +1,16 @@
-package me.vvcaw.spotinder.api.spotify
+package me.vvcaw.scylly.api.spotify
 
 import com.wrapper.spotify.SpotifyApi
 import com.wrapper.spotify.SpotifyHttpManager
-import com.wrapper.spotify.model_objects.credentials.ClientCredentials
 import com.wrapper.spotify.model_objects.specification.Track
 import com.wrapper.spotify.model_objects.specification.User
-import me.vvcaw.spotinder.api.spotify.Spotify.UnauthorizedException
-import me.vvcaw.spotinder.api.spotify.Spotify.BadRequestException
-import me.vvcaw.spotinder.data.ClientData
-import me.vvcaw.spotinder.data.SimplifiedSongRecord
-import me.vvcaw.spotinder.data.SongRecord
-import me.vvcaw.spotinder.data.UserRecord
+import me.vvcaw.scylly.api.spotify.Spotify.UnauthorizedException
+import me.vvcaw.scylly.api.spotify.Spotify.BadRequestException
+import me.vvcaw.scylly.data.ClientData
+import me.vvcaw.scylly.data.SongRecord
+import me.vvcaw.scylly.data.UserRecord
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
-import kotlin.math.exp
 
 internal class SpotifyImplementation(clientData: ClientData) : Spotify {
 

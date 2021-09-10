@@ -1,4 +1,4 @@
-package me.vvcaw.spotinder.data
+package me.vvcaw.scylly.data
 
 // API
 data class AddRequest(val songs: List<SongRecord>)

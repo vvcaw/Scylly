@@ -1,9 +1,9 @@
-package me.vvcaw.spotinder
+package me.vvcaw.scylly
 
 import com.beust.klaxon.Klaxon
-import me.vvcaw.spotinder.api.Api
-import me.vvcaw.spotinder.api.spotify.Spotify
-import me.vvcaw.spotinder.data.ClientData
+import me.vvcaw.scylly.api.Api
+import me.vvcaw.scylly.api.spotify.Spotify
+import me.vvcaw.scylly.data.ClientData
 import java.io.File
 
 fun main(args: Array<String>) {

@@ -1,7 +1,7 @@
-package me.vvcaw.spotinder.api.spotify
+package me.vvcaw.scylly.api.spotify
 
 import com.wrapper.spotify.model_objects.specification.*
-import me.vvcaw.spotinder.data.*
+import me.vvcaw.scylly.data.*
 import java.util.concurrent.TimeUnit
 
 fun Artist.toArtistRecord() = ArtistRecord(

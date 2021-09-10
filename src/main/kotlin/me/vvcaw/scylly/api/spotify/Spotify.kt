@@ -1,11 +1,10 @@
-package me.vvcaw.spotinder.api.spotify
+package me.vvcaw.scylly.api.spotify
 
 import com.wrapper.spotify.model_objects.specification.Track
 import com.wrapper.spotify.model_objects.specification.User
-import me.vvcaw.spotinder.data.ClientData
-import me.vvcaw.spotinder.data.SimplifiedSongRecord
-import me.vvcaw.spotinder.data.SongRecord
-import me.vvcaw.spotinder.data.UserRecord
+import me.vvcaw.scylly.data.ClientData
+import me.vvcaw.scylly.data.SongRecord
+import me.vvcaw.scylly.data.UserRecord
 
 interface Spotify {
     abstract class LogicException(text: String) : Exception(text)

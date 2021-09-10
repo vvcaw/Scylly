@@ -1,12 +1,12 @@
-package me.vvcaw.spotinder.api
+package me.vvcaw.scylly.api
 
 import com.wrapper.spotify.model_objects.specification.Track
 import de.elfsoft.javalin.vite.JavalinVite
 import de.elfsoft.javalin.vite.ViteHandler
 import io.javalin.Javalin
 import io.javalin.http.*
-import me.vvcaw.spotinder.api.spotify.Spotify
-import me.vvcaw.spotinder.data.UserRecord
+import me.vvcaw.scylly.api.spotify.Spotify
+import me.vvcaw.scylly.data.UserRecord
 
 class Api(spotify: Spotify, isDev: Boolean, port: Int) {
 

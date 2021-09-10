@@ -1,7 +1,7 @@
 <template>
   <div id="particles-js" class="flex flex-col items-center w-full h-screen justify-center z-10 bg-spotify">
     <div class="absolute flex flex-col items-center w-full h-full justify-center z-20">
-      <span class="select-none font-bold text-gray-900 text-4xl md:text-5xl">Spotinder</span>
+      <span class="select-none font-bold text-gray-900 text-4xl md:text-5xl">Scylly</span>
       <p class="select-none	text-center text-md md:text-lg font-medium text-gray-700 mt-2 md:mt-4">Discover new songs based on what you like listening to at the moment.</p>
       <p class="select-none text-center	text-md md:text-lg hidden md:inline-block font-medium text-gray-700 mt-1">Just log into your spotify account to get started!</p>
       <button class="select-none font-light mt-3 md:mt-5 bg-gray-800 p-2 pl-5 pr-5 rounded-md text-white text-sm md:text-lg shadow-md border border-transparent border-0 hover:bg-transparent hover:border-2 hover:shadow-none hover:border-white">Get started</button>
