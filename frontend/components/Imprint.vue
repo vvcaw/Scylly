@@ -1,25 +1,22 @@
-<template>
-  <div id="particles-js" class="flex flex-col items-center w-full h-screen justify-center z-10 bg-spotify">
-    <div class="absolute flex flex-col items-center w-full h-full justify-center z-20">
-      <span class="select-none font-bold text-gray-900 text-4xl md:text-5xl">Scylly</span>
-      <p class="select-none	text-center text-md md:text-lg font-medium text-gray-700 mt-2 md:mt-4">Discover new songs based on what you like listening to at the moment.</p>
-      <p class="select-none text-center	text-md md:text-lg hidden md:inline-block font-medium text-gray-700 mt-1">Just log into your spotify account to get started!</p>
-      <form method="get" action="https://accounts.spotify.com:443/authorize">
-        <input type="hidden" name="client_id" value="379ef201c377495cb09a99464e0e49df">
-        <input type="hidden" name="response_type" value="code">
-        <input type="hidden" name="scope" value="user-top-read user-library-modify">
-        <input type="hidden" name="redirect_uri" value="https://scylly.eric.familie-elflein.de/redirect">
-        <input type="hidden" name="show_dialog" value="true">
-        <button class="select-none font-light mt-3 md:mt-5 bg-gray-800 p-2 pl-5 pr-5 rounded-md text-white text-sm md:text-lg shadow-md border border-transparent border-0 hover:bg-transparent hover:border-2 hover:shadow-none hover:border-white">Get started</button>
-      </form>
+<template id="#app">
+  <div class="h-screen w-full flex flex-col justify-center bg-spotify">
+    <div id="particles-js" class="h-60 w-full items-end justify-start flex">
+      <div class="absolute border-2 bg-transparent z-20 border-dashed rounded-md pl-5 pr-5 pb-3 p-2 ml-12 mb-12">
+        <span class="text-white text-4xl font-medium select-none">Imprint</span>
+      </div>
     </div>
-    <div class="absolute flex flex-row items-center justify-center gap-2 right-2 bottom-2 z-20">
-      <form method="get" action="/imprint">
-        <button type="submit" class="opacity-80 select-none right-2 bottom-2 bg-gray-800 p-2 pl-5 pr-5 rounded-md text-white">Imprint</button>
-      </form>
-      <form method="get" action="/privacy">
-        <button type="submit" class="opacity-80 select-none right-2 bottom-2 bg-gray-800 p-2 pl-5 pr-5 rounded-md text-white">Privacy Policy</button>
-      </form>
+    <div class="w-full h-full bg-gray-800">
+      <div class="ml-12 mt-12 flex flex-col items-start justify-start text-white gap-y-3">
+        <h2 class="text-xl font-medium">Angaben gem&auml;&szlig; &sect; 5 TMG</h2>
+        <p>Eric Elflein<br />
+          Treinfeld 47<br />
+          96184 Rentweinsdorf</p>
+
+        <h2 class="text-xl font-medium">Kontakt</h2>
+        <p>E-Mail: eric.elflein@googlemail.com</p>
+
+        <p>Quelle: <a href="https://www.e-recht24.de">e-recht24.de</a></p>
+      </div>
     </div>
   </div>
 </template>
@@ -28,7 +25,7 @@
 import '../assets/particles.js'
 
 export default {
-  name: "Index",
+  name: "Imprint",
   mounted() {
     window.particlesJS('particles-js', {
       "particles": {
@@ -143,3 +140,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+</style>

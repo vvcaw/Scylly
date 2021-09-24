@@ -1,7 +1,7 @@
 <template>
   <div ref="song"
        v-bind:class="zIndex"
-       class="absolute pointer-events-none z-10 mr-0 ml-0 p-4 bg-black border-2 border-solid h-80 w-64 md:h-96 md:w-72 rounded-md flex flex-col">
+       class="relative pointer-events-none z-10 mr-0 ml-0 p-4 bg-black border-2 border-solid h-80 w-64 md:h-96 md:w-72 rounded-md flex flex-col">  <!-- absolute -->
     <img class="select-none rounded-md" :src="dataSongs[activeIndex].images[1]" alt="Song cover">
     <div class="h-full w-full flex flex-col items-start justify-center">
       <div class="flex flex-row-reverse md:flex-col h-full w-full justify-end gap-1 md:gap-0 md:justify-center items-center md:items-start">
@@ -62,6 +62,10 @@ export default {
     setCardNum(newNum) {
       this.cardNum = newNum
     },
+    setupAudio() {
+      this.audio = new Audio()
+      this.audio.play()
+    },
     changeVolume(value) {
       let newVolume = this.volume * 10
       newVolume = ((newVolume + value) / 10)
@@ -103,12 +107,11 @@ export default {
       if (this.dataSongs[this.activeIndex].playUrl === "")
         return
 
-      let audio = new Audio(this.dataSongs[this.activeIndex].playUrl)
-      audio.volume = this.volume;
+      this.audio.volume = this.volume;
 
-      this.audio = audio
+      this.audio.src = this.dataSongs[this.activeIndex].playUrl
 
-      audio.play().then(() => {
+      this.audio.play().then(() => {
         this.startedPlaying = true
 
         if (!this.playing) {
@@ -162,10 +165,12 @@ export default {
               break;
             case "marginLeft":
               card.css(x.prop, `${now}rem`);
+              card.css('-webkit-margin-start', `${now}rem`);
               vue.margin[0] = now;
               break;
             case "marginRight":
               card.css(x.prop, `${now}rem`);
+              card.css('-webkit-margin-end', `${now}rem`);
               vue.margin[1] = now;
               break;
           }

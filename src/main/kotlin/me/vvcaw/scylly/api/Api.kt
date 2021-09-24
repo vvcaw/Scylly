@@ -31,6 +31,8 @@ class Api(spotify: Spotify, isDev: Boolean, port: Int) {
         }
 
         app.get("/", ViteHandler("pages/index.js"))
+        app.get("/privacy", ViteHandler("pages/privacy.js"))
+        app.get("/imprint", ViteHandler("pages/imprint.js"))
 
         app.get("/redirect") { ctx ->
             // Get custom code from url to authorize user

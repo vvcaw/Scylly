@@ -11,7 +11,7 @@
             crossorigin="anonymous"></script> -->
     <title>Scylly</title>
     <meta charset="utf8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     @viteMountPoint
 </head>
 <body>
@@ -28,5 +28,19 @@
     html,.no-scrollbar {
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        overflow-x: hidden;
+    }
+
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        overflow-x: hidden;
+        overscroll-behavior-x: none;
     }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div v-if="visible" class="absolute z-50 h-full md:bg-transparent bg-gray-900 w-full md:w-full flex items-center justify-center">
-    <div class="bg-gray-900 h-auto w-11/12 md:h-1/2 z-50 rounded-md md:p-4 p-4 flex flex-col space-y-4 md:space-y-7 justify-center items-center">
+  <div v-if="visible" class="absolute z-50 h-screen md:bg-transparent bg-gray-900 w-full md:w-full flex items-center justify-center">
+    <div class="bg-gray-900 h-auto w-11/12 md:h-2/3 z-50 rounded-md md:p-4 p-4 flex flex-col space-y-4 md:space-y-7 justify-center items-center">
       <div class="w-full h-auto flex justify-center items-center flex-row-reverse gap-x-3">
         <span class="text-gray-200 font-bold text-2xl md:text-5xl">What is this?</span>
 

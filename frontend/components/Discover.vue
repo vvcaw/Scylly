@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center w-full h-screen justify-center z-10">
+  <div class="flex bg-black items-center w-full h-screen justify-center z-10">
 
     <ReturnArrow/>
     <VolumeRocker v-on:minus="changeVolume(-1)" v-on:plus="changeVolume(1)"/>
@@ -206,6 +206,10 @@ export default {
       }
     },
     handleUserValidated() {
+      this.cards.forEach((card) => {
+        card.setupAudio()
+      })
+
       if (this.userIsOnMobile) {
         const card = this.cards[this.activeCard]
 

@@ -130,7 +130,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>me.vvcaw.hotify.MainKt</mainClass>
+                            <mainClass>me.vvcaw.scylly.MainKt</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
